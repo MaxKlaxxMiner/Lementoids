@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemLib", "LemLib\LemLib.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemTool", "LemTool\LemTool.csproj", "{E478794C-BAC0-4803-A6BD-6646FADFEE90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemTest", "LemTest\LemTest.csproj", "{9550C147-081B-402B-A58E-C73CBA7CE5FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{E478794C-BAC0-4803-A6BD-6646FADFEE90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E478794C-BAC0-4803-A6BD-6646FADFEE90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E478794C-BAC0-4803-A6BD-6646FADFEE90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9550C147-081B-402B-A58E-C73CBA7CE5FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9550C147-081B-402B-A58E-C73CBA7CE5FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9550C147-081B-402B-A58E-C73CBA7CE5FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9550C147-081B-402B-A58E-C73CBA7CE5FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
