@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿#region # using *.*
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using LemLib;
+#endregion
 
 namespace LemTool
 {
@@ -22,16 +18,21 @@ namespace LemTool
 
     private void LemToolForm1_Shown(object sender, EventArgs e)
     {
+      var c0 = new Color3F(0, 0, 0); // black
+      var c1 = new Color3F(0, 0, 1); // blue
+      var c2 = new Color3F(0, 1, 0); // gree
+      var c3 = new Color3F(1, 0, 0); // red
+      var c4 = new Color3F(1, 1, 1); // white
+
       var gColor = new int[1024];
       for (int i = 0; i < 256; i++)
       {
-        float fInc = i / 256f;
-        float fDec = (255 - i) / 256f;
+        float f = i / 256f;
 
-        gColor[i] = new Color3F(0, 0, fInc).Int32;
-        gColor[i + 256] = new Color3F(0, fInc, fDec).Int32;
-        gColor[i + 512] = new Color3F(fInc, fDec, 0).Int32;
-        gColor[i + 768] = new Color3F(1, fInc, fInc).Int32;
+        gColor[i] = Color3F.Mix(c0, c1, f).Int32;
+        gColor[i + 256] = Color3F.Mix(c1, c2, f).Int32;
+        gColor[i + 512] = Color3F.Mix(c2, c3, f).Int32;
+        gColor[i + 768] = Color3F.Mix(c3, c4, f).Int32;
       }
 
       var gradient = new Bitmap(1024, gradientBox1.Height, PixelFormat.Format32bppRgb);
