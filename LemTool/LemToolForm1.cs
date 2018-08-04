@@ -26,12 +26,12 @@ namespace LemTool
       for (int i = 0; i < 256; i++)
       {
         float fInc = i / 256f;
-        float fDec = (255-i) / 256f;
+        float fDec = (255 - i) / 256f;
 
-        gColor[i] = G.GetColor(0, 0, fInc);
-        gColor[i + 256] = G.GetColor(0, fInc, fDec);
-        gColor[i + 512] = G.GetColor(fInc, fDec, 0);
-        gColor[i + 768] = G.GetColor(1, fInc, fInc);
+        gColor[i] = new Color3F(0, 0, fInc).Int32;
+        gColor[i + 256] = new Color3F(0, fInc, fDec).Int32;
+        gColor[i + 512] = new Color3F(fInc, fDec, 0).Int32;
+        gColor[i + 768] = new Color3F(1, fInc, fInc).Int32;
       }
 
       var gradient = new Bitmap(1024, gradientBox1.Height, PixelFormat.Format32bppRgb);
