@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LemLib;
 
 namespace LemTool
 {
@@ -24,10 +25,13 @@ namespace LemTool
       var gColor = new int[1024];
       for (int i = 0; i < 256; i++)
       {
-        gColor[i] = i;
-        gColor[i + 256] = (255 - i) + i * 256;
-        gColor[i + 512] = (255 - i) * 256 + i * 65536;
-        gColor[i + 768] = i + i * 256 + 255 * 65536;
+        float fInc = i / 256f;
+        float fDec = (255-i) / 256f;
+
+        gColor[i] = G.GetColor(0, 0, fInc);
+        gColor[i + 256] = G.GetColor(0, fInc, fDec);
+        gColor[i + 512] = G.GetColor(fInc, fDec, 0);
+        gColor[i + 768] = G.GetColor(1, fInc, fInc);
       }
 
       var gradient = new Bitmap(1024, gradientBox1.Height, PixelFormat.Format32bppRgb);
