@@ -56,6 +56,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestTools\TestTools.cs" />
     <EmbeddedResource Include="LemToolForm1.resx">
       <DependentUpon>LemToolForm1.cs</DependentUpon>
     </EmbeddedResource>
