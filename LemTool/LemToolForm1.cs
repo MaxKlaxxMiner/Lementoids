@@ -18,11 +18,16 @@ namespace LemTool
       InitializeComponent();
     }
 
-    bool multiColor = true;
+    int gradientType;
+    int resolution = 6;
 
     void UpdatePic()
     {
-      pictureBox1.Image = TestTools.GradientTest(pictureBox1.Width, pictureBox1.Height, multiColor);
+      pictureBox1.Image = TestTools.GradientTest(pictureBox1.Width, pictureBox1.Height, gradientType, resolution);
+      label1.Text = "[ Space ] - Gradient type: " + (gradientType == 0 ? "linear" : (gradientType == 1 ? "bilinear" : "radial"));
+      label2.Text = "[ + / - ] - Resolution: " + (1 << resolution).ToString("N0");
+      pictureBox1.Refresh();
+      Refresh();
     }
 
     private void LemToolForm1_Shown(object sender, EventArgs e)
@@ -35,12 +40,34 @@ namespace LemTool
       UpdatePic();
     }
 
-    private void LemToolForm1_KeyPress(object sender, KeyPressEventArgs e)
+    private void LemToolForm1_KeyDown(object sender, KeyEventArgs e)
     {
-      if (e.KeyChar == ' ')
+      switch (e.KeyCode)
       {
-        multiColor = !multiColor;
-        UpdatePic();
+        case Keys.Escape: Close(); break;
+
+        case Keys.Space:
+        {
+          gradientType++;
+          if (gradientType == 3) gradientType = 0;
+          UpdatePic();
+        } break;
+
+        case Keys.Add:
+        case Keys.Oemplus:
+        {
+          resolution++;
+          if (resolution >= 13) resolution = 13;
+          UpdatePic();
+        } break;
+
+        case Keys.Subtract:
+        case Keys.OemMinus:
+        {
+          resolution--;
+          if (resolution < 3) resolution = 3;
+          UpdatePic();
+        } break;
       }
     }
   }

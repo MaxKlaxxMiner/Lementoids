@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -31,15 +32,18 @@ namespace LemTool
       return output;
     }
 
-    public static Bitmap GradientTest(int width, int height, bool multiColor)
+    public static Bitmap GradientTest(int width, int height, int gradientType, int resolution)
     {
+      int resValue = 1 << resolution;
+      int resMask = resValue - 1;
+
       var colors = new Dictionary<int, Color3F>
       {
-        { 0, new Color3F(0, 0, 0) }, // black
-        { 255, new Color3F(0, 0, 1) }, // blue
-        { 511, new Color3F(0, 1, 0) }, // gree
-        { 767, new Color3F(1, 0, 0) }, // red
-        { 1023, new Color3F(1, 1, 1) } // white
+        { 0, new Color3F(0, 0, 0) },                    // black
+        { resValue / 4 * 1 - 1, new Color3F(0, 0, 1) }, // blue
+        { resValue / 4 * 2 - 1, new Color3F(0, 1, 0) }, // gree
+        { resValue / 4 * 3 - 1, new Color3F(1, 0, 0) }, // red
+        { resValue / 4 * 4 - 1, new Color3F(1, 1, 1) }  // white
       };
 
       var gradientMap = GradientMap(colors);
@@ -47,35 +51,54 @@ namespace LemTool
       var gradientTest = new Bitmap(width, height, PixelFormat.Format32bppRgb);
       var gradientPix = new int[width * height];
 
-      if (multiColor)
+      switch (gradientType)
       {
-        var black = new Color3F(0x000000);
-        var white = new Color3F(0xffffff);
-        for (int x = 0; x < width; x++)
+        #region # case 0: // --- simple Linear ---
+        case 0:
         {
-          int pos = x * 1024 / width;
-          var gColor = new Color3F(gradientMap[pos]);
-          for (int y = 0; y < height / 2; y++)
+          for (int x = 0; x < width; x++)
           {
-            gradientPix[x + y * width] = Color3F.Mix(black, gColor, y / (height / 2f)).Int32;
+            int pos = (x << resolution) / width;
+            var gColor = gradientMap[pos];
+            for (int y = 0; y < height; y++)
+            {
+              gradientPix[x + y * width] = gColor;
+            }
           }
-          for (int y = height / 2; y < height; y++)
-          {
-            gradientPix[x + y * width] = Color3F.Mix(gColor, white, (y - height / 2) / (height / 2f)).Int32;
-          }
-        }
-      }
-      else
-      {
-        for (int x = 0; x < width; x++)
+        } break;
+        #endregion
+        #region # case 1: // --- 2D Linear ---
+        case 1:
         {
-          int pos = x * 1024 / width;
-          var gColor = gradientMap[pos];
+          var black = new Color3F(0x000000); // top color
+          var white = new Color3F(0xffffff); // bottom color
+          for (int x = 0; x < width; x++)
+          {
+            int pos = (x << resolution) / width;
+            var gColor = new Color3F(gradientMap[pos]);
+            for (int y = 0; y < height / 2; y++)
+            {
+              gradientPix[x + y * width] = Color3F.Mix(black, gColor, y / (height / 2f)).Int32;
+            }
+            for (int y = height / 2; y < height; y++)
+            {
+              gradientPix[x + y * width] = Color3F.Mix(gColor, white, (y - height / 2) / (height / 2f)).Int32;
+            }
+          }
+        } break;
+        #endregion
+        case 2:
+        {
+          int max = (int)(width / 2f * (width - width / 2f) / resValue + height / 2f * (height - height / 2f) / resValue + 1f);
           for (int y = 0; y < height; y++)
           {
-            gradientPix[x + y * width] = gColor;
+            for (int x = 0; x < width; x++)
+            {
+              gradientPix[x + y * width] = gradientMap[(uint)(x * (width - x) + y * (height - y)) / max & resMask];
+            }
           }
-        }
+        } break;
+        default: throw new Exception("unknown gradientType: " + gradientType);
       }
 
       var bdata = gradientTest.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb);
